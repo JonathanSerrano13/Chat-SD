@@ -1,0 +1,74 @@
+/* ========== ESTILOS GENERALES ==========*/
+body {
+    background: #f8f9fa;
+}
+
+/* ========== CHAT ==========*/
+.chat-card {
+    height: 70vh;
+}
+
+.chat-body {
+    overflow-y: auto;
+    height: 100%;
+    background: #ffffff;
+}
+
+/* ========== MENSAJES ==========*/
+.message {
+    margin-bottom: 8px;
+}
+
+.message .sender {
+    font-weight: 600;
+}
+
+/* Estilos para avisos del sistema (join, leave) */
+.message.notice {
+    color: #0f5132;
+    background: #d1e7dd;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.95rem;
+}
+
+/* Timestamp (hora de envío) */
+.message .timestamp {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-left: 6px;
+}
+
+/* ========== EMOJIS ==========*/
+.emoji-wrap {
+    position: relative;
+}
+
+/* Panel desplegable de emojis */
+.emoji-panel {
+    position: absolute;
+    bottom: 42px;
+    left: 0;
+    z-index: 10;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ========== ARCHIVOS MULTIMEDIA ==========*/
+/* Contenedor para archivos compartidos (audio, video, imágenes) */
+.media-message {
+    margin-bottom: 12px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* Estilos para elementos multimedia */
+.media-message audio,
+.media-message video,
+.media-message img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 4px;
+}

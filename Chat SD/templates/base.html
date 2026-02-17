@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <!-- Metadatos -->
+    <meta charset="utf-8">
+    <title>{{ title or "Chat" }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- CSS de Bootstrap (framework de estilos) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    <!-- CSS personalizado de la aplicación -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Contenedor principal -->
+    <div class="container py-4">
+        <!-- Mensajes flash (notificaciones temporales) -->
+        {% with mensajes = get_flashed_messages() %}
+        {% if mensajes %}
+            <div class="alert alert-info" id="flashAlert">
+            {{ mensajes[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        
+        <!-- Contenido dinámico de cada página -->
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Socket.IO para comunicación en tiempo real -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    
+    <!-- Emoji picker (selector de emojis) -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
+    
+    <!-- Script para ocultar alertas automáticamente -->
+    <script>
+        const flashAlert = document.getElementById("flashAlert");
+        if (flashAlert) {
+            setTimeout(() => {
+                flashAlert.classList.add("d-none");
+            }, 3000);
+        }
+    </script>
+    
+    <!-- JavaScript principal de la aplicación -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

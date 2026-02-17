@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <!-- COLUMNA IZQUIERDA: Panel de control de salas -->
+    <div class="col-lg-4">
+        <!-- Información del usuario y botón de salida -->
+        <div class="card mb-3">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <strong>{{ username }}</strong>
+            <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-secondary">Salir</a>
+        </div>
+        </div>
+
+        <!-- Formulario para crear una nueva sala -->
+        <div class="card mb-3">
+        <div class="card-body">
+            <h6>Crear sala</h6>
+            <form method="post" action="{{ url_for('room_create') }}" class="d-flex gap-2">
+            <input class="form-control" name="name" placeholder="nombre de la sala">
+            <button class="btn btn-success">Crear</button>
+            </form>
+            <div class="form-text">Se genera un codigo de 6 caracteres.</div>
+        </div>
+        </div>
+
+        <!-- Formulario para unirse a una sala existente -->
+        <div class="card mb-3">
+        <div class="card-body">
+            <h6>Unirse a sala</h6>
+            <form method="post" action="{{ url_for('room_join') }}" class="d-flex gap-2">
+            <input class="form-control" name="code" placeholder="codigo (6 caracteres)">
+            <button class="btn btn-primary">Unirse</button>
+            </form>
+        </div>
+        </div>
+
+        <!-- Lista de salas del usuario (clickeable para seleccionar) -->
+        <div class="card mb-3">
+        <div class="card-body">
+            <h6>Salas</h6>
+            <div class="list-group" id="roomList">
+            {% for r in rooms %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <!-- Botón para seleccionar la sala -->
+                    <button class="btn btn-link text-start flex-grow-1 p-0"
+                            data-room-type="room" data-room-id="{{ r.id }}">
+                        {{ r.nombre }} ({{ r.codigo }})
+                    </button>
+                    <div class="d-flex gap-2 ms-2">
+                        <!-- Si eres el creador: opción de borrar -->
+                        {% if r.id_creador == user_id %}
+                        <form method="post" action="{{ url_for('room_delete') }}">
+                            <input type="hidden" name="room_id" value="{{ r.id }}">
+                            <button class="btn btn-sm btn-outline-danger" title="Borrar sala">Borrar</button>
+                        </form>
+                        <!-- Si no eres el creador: opción de salir -->
+                        {% else %}
+                        <form method="post" action="{{ url_for('room_leave') }}">
+                            <input type="hidden" name="room_id" value="{{ r.id }}">
+                            <button class="btn btn-sm btn-outline-secondary" title="Salir de sala">Salir</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-muted">Sin salas.</div>
+            {% endfor %}
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: Chat y mensajes -->
+    <div class="col-lg-8">
+        <div class="card chat-card">
+        <!-- Avisos de la sala (unirse, salir, etc.) -->
+        <div class="card-body pt-3 pb-0">
+            <div id="roomNotice" class="alert alert-info d-none" role="alert"></div>
+        </div>
+        
+        <!-- Área de mensajes (contenedor dinámico) -->
+        <div class="card-body chat-body" id="messages"></div>
+        
+        <!-- Footer del chat: formulario para enviar mensajes, emojis y archivos -->
+        <div class="card-footer d-none" id="messageFooter">
+            <form id="messageForm" class="d-flex gap-2">
+                <!-- Selector de emojis -->
+                <div class="emoji-wrap">
+                    <button type="button" class="btn btn-outline-secondary" id="emojiToggle" title="Emojis">😀</button>
+                    <emoji-picker id="emojiPicker" class="emoji-panel d-none"></emoji-picker>
+                </div>
+                
+                <!-- Botón para subir archivos (mp3, mp4, jpg, png) -->
+                <label class="btn btn-outline-secondary" id="fileLabel" title="Subir archivo">
+                    📎
+                    <input type="file" id="fileInput" accept=".mp3,.mp4,.jpg,.png" hidden>
+                </label>
+                
+                <!-- Campo de entrada de texto y botón enviar -->
+                <input class="form-control" id="messageInput" placeholder="Escribe un mensaje">
+                <button class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
